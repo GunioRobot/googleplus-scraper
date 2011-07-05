@@ -30,8 +30,8 @@ class exports.GooglePlusScraper
 		
 		userProfile =
 			name:
-				fist: @gpConfig[5][2][4][1]
-				last: @gpConfig[5][2][4][1]
+				first: @gpConfig[5][2][4][1]
+				last: @gpConfig[5][2][4][2]
 				full: @gpConfig[5][2][4][3]
 			description: @gpConfig[5][2][33][1]
 			occupation: @gpConfig[5][2][6][1]
