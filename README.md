@@ -16,6 +16,8 @@ It only took me a few minutes and is more a proof of concept. Of cause you're ve
 3. CoffeeScript: `$ npm install -g coffee-script`
 4. jsdom: `$ npm install jsdom`
 
+Don't forget to insert a valid Google+ ID, see `googlePlusUserId` in app.coffee
+
 
 ## How it works
 
