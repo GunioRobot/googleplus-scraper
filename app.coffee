@@ -6,7 +6,7 @@ util       = require 'util'
 googleplus = require './lib/googleplus-scraper.coffee'
 
 
-SERVER_PORT   = '3001'
+SERVER_PORT   = '4567'
 
 
 # Process life vest. Just in case.
@@ -21,10 +21,16 @@ server = require('http').createServer (req, res) ->
     showPosts = (gpRequest[2] is 'posts')
     gp = googleplus.GooglePlusScraper gpRequest[1], () =>
       gpResponse = if showPosts then gp.getPosts() else gp.getProfile()
-      res.writeHead 200, {'Content-Type': 'application/json; charset=utf-8' }
+      res.writeHead 200,
+        'Content-Type': 'application/json; charset=utf-8'
+        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Headers': 'X-Requested-With'
       res.end JSON.stringify gpResponse
   else
-    res.writeHead 200, {'Content-Type': 'text/html; charset=utf-8'}
+    res.writeHead 200,
+      'Content-Type': 'text/html; charset=utf-8'
+      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Headers': 'X-Requested-With'
     res.end '''
             <pre>
             <strong>Google+ Scraper</strong>
