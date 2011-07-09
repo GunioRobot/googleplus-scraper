@@ -16,7 +16,12 @@ It only took me a few minutes and is more a proof of concept. Of cause you're ve
 3. CoffeeScript: `$ npm install -g coffee-script`
 4. jsdom: `$ npm install jsdom`
 
-Don't forget to insert a valid Google+ ID, see `googlePlusUserId` in app.coffee
+Running `app.coffee` launches the server process. At the moment, profile information or posts are supported:
+
+/[Google+ User ID]/                 — or —  
+/[Google+ User ID]/profile          Return user's public profile  
+
+/[Google+ User ID]/posts            Return user's posts  
 
 
 ## How it works
