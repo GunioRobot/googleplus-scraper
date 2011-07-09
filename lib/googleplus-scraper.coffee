@@ -16,6 +16,8 @@ class exports.GooglePlusScraper
 
 
   getProfile: ->
+    gender = ['', 'male', 'female', 'other'];
+
     resolveChatServices = (chatIds) ->
       chatServices = ['', '', 'AIM', 'MSN', 'Yahoo', 'Skype', 'QQ', 'Google Talk', 'ICQ', 'Jabber', 'Net Meeting']
       chats = []
@@ -92,7 +94,7 @@ class exports.GooglePlusScraper
         chat:              resolveChatServices(@gpConfig[5][2][13][7])
       relationship:        'tbd'
       lookingFor:          'tbd'
-      gender:              'tbd'
+      gender:              gender[@gpConfig[5][2][17][1]]
       birthday:            @gpConfig[5][2][16][1]
       webProfiles:         webProfiles
       usersInCircles:      @gpConfig[5][3][2][1]
