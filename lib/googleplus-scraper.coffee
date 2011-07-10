@@ -2,7 +2,6 @@ request= require 'request'
 
 class exports.GooglePlusScraper
   gpBaseURL = 'https://plus.google.com/'
-  gpConfig = null
 
   constructor: (@user, callback) ->
     return new GooglePlusScraper(@user, callback) if !(this instanceof GooglePlusScraper)
