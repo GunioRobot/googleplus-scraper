@@ -5,8 +5,7 @@ Retrieve data from Google+ profiles with [NodeJS](http://nodejs.org/) and [Coffe
 The technique used is called “[web scraping](http://en.wikipedia.org/wiki/Web_scraping)”.
 That means: If Google+ changes anything on their HTML, the script is going to fail.
 
-**Note: This script is very very basic at the moment and very very beta.**  
-It only took me a few minutes and is more a proof of concept. Of cause you're very welcome to contribute. ;-)
+Note: This script is still beta. Of cause you're very welcome to contribute. ;-)
 
 
 ## Requirements
@@ -14,7 +13,7 @@ It only took me a few minutes and is more a proof of concept. Of cause you're ve
 1. NodeJS: see https://github.com/joyent/node/wiki/Installation
 2. npm: `$ curl http://npmjs.org/install.sh | sh`
 3. CoffeeScript: `$ npm install -g coffee-script`
-4. jsdom: `$ npm install jsdom`
+4. [request](https://github.com/mikeal/request): `$ npm install request`
 
 Running `app.coffee` launches the server process. At the moment, profile information or posts are supported:
 

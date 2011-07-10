@@ -19,13 +19,17 @@ server = require('http').createServer (req, res) ->
 
   if gpRequest
     showPosts = (gpRequest[2] is 'posts')
-    gp = googleplus.GooglePlusScraper gpRequest[1], () =>
-      gpResponse = if showPosts then gp.getPosts() else gp.getProfile()
+    gp = googleplus.GooglePlusScraper gpRequest[1], (err, data) =>
+      if err
+        gpResponse = { "err": err }
+      else  
+        gpResponse = if showPosts then gp.getPosts(data) else gp.getProfile(data)
       res.writeHead 200,
         'Content-Type': 'application/json; charset=utf-8'
         'Access-Control-Allow-Origin': '*'
         'Access-Control-Allow-Headers': 'X-Requested-With'
       res.end JSON.stringify gpResponse
+
   else
     res.writeHead 200,
       'Content-Type': 'text/html; charset=utf-8'
