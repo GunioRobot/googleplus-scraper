@@ -106,9 +106,9 @@ class exports.GooglePlusScraper
     posts = []
     for post in @gpConfig[4][0]
       posts.push(
-        permalink: gpBaseURL + post[21]
-        bodyHtml: post[4]
-        bodyPlain: post[20]
+        permalink:   gpBaseURL + post[21]
+        bodyHtml:    post[4]
+        bodyPlain:   post[20]
         attachments: post[66]
       )
     return posts
