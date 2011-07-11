@@ -107,9 +107,12 @@ class exports.GooglePlusScraper
     posts = []
     for post in data[4][0]
       posts.push(
-        permalink:   gpBaseURL + post[21]
-        bodyHtml:    post[4]
-        bodyPlain:   post[20]
-        attachments: post[66]
+        permalink:      gpBaseURL + post[21]
+        bodyHtml:       post[4]
+        bodyPlain:      post[20]
+        attachments:    post[66]
+        votes:          post[73][16]
+        sharedBy:       post[25]
+        latestComments: post[7]
       )
     return posts
