@@ -1,4 +1,4 @@
-request= require 'request'
+request = require 'request'
 
 class exports.GooglePlusScraper
   gpBaseURL = 'https://plus.google.com/'
@@ -7,13 +7,19 @@ class exports.GooglePlusScraper
     return new GooglePlusScraper(@user, callback) if !(this instanceof GooglePlusScraper)
 
     request {uri: "#{gpBaseURL}#{@user}"}, (err, res, body) ->
-      gpConfig = body.match(/OZ_initData = {[\u000a\u000d\u2028\u2029\w\W]+?}/m)
-      if gpConfig[0]
-        # Must be eval()'ed as it's not valid JSON. Bummer.
-        eval(gpConfig[0])
-        callback(null, OZ_initData)
-      else
+      err = if res.statusCode is 200 then err else res.statusCode
+      if err
         callback(err)
+        return
+      
+      gpConfig = body.match(/OZ_initData = {[\u000a\u000d\u2028\u2029\w\W]+?}/m)
+      if not gpConfig or gpConfig[0]
+        callback('Could not load Google+ data') 
+        return
+
+      # Must be eval()'ed as it's not valid JSON. Bummer.
+      eval(gpConfig[0])
+      callback(null, OZ_initData)
 
 
   getProfile: (data) ->

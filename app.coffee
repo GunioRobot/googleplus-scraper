@@ -10,30 +10,33 @@ SERVER_PORT   = '4567'
 
 
 # Process life vest. Just in case.
+httpResponse = null
 process.addListener 'uncaughtException', (err) ->
   util.log err
+  write(httpResponse, JSON.stringify({ error: err.message }), 'application/json') if httpResponse?
+
+
+write = (res, body, mimetype = 'text/html') ->
+  res.writeHead 200,
+    'Content-Type': "#{mimetype}; charset=utf-8"
+    'Content-Length': Buffer.byteLength(body, 'utf-8')
+    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Headers': 'X-Requested-With'
+  res.end body
 
 
 server = require('http').createServer (req, res) ->
   gpRequest = url.parse(req.url).pathname.match(/\/(\d{21})\/?(profile|posts)?\/?$/)
-
-  write = (body, mimetype = 'text/html') ->
-    res.writeHead 200,
-      'Content-Type': "#{mimetype}; charset=utf-8"
-      'Content-Length': Buffer.byteLength(body, 'utf-8')
-      'Access-Control-Allow-Origin': '*'
-      'Access-Control-Allow-Headers': 'X-Requested-With'
-    res.end body
-
+  httpResponse = res
 
   if gpRequest
     showPosts = (gpRequest[2] is 'posts')
     gp = googleplus.GooglePlusScraper gpRequest[1], (err, data) =>
       if err
-        gpResponse = { 'error': err }
+        gpResponse = { error: err }
       else  
         gpResponse = if showPosts then gp.getPosts(data) else gp.getProfile(data)
-      write JSON.stringify(gpResponse), 'application/json'
+      write(res, JSON.stringify(gpResponse), 'application/json')
 
   else
     body = '''
@@ -53,7 +56,7 @@ server = require('http').createServer (req, res) ->
       </pre>
       </body></html>
       '''
-    write body
+    write(res, body)
 
 
 server.listen SERVER_PORT
