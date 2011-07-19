@@ -13,7 +13,7 @@ class exports.GooglePlusScraper
         return
       
       gpConfig = body.match(/OZ_initData = {[\u000a\u000d\u2028\u2029\w\W]+?}/m)
-      if not gpConfig or gpConfig[0]
+      if not gpConfig or not gpConfig[0]
         callback('Could not load Google+ data') 
         return
 
@@ -108,7 +108,7 @@ class exports.GooglePlusScraper
       usersInCircles:
         count:             data[5][3][0][0]
         randomUsers:       data[5][3][0][1]
-        allUsers:          "//plus.google.com/_/socialgraph/lookup/visible/?o=%5Bnull%2Cnull%2C%22 #{@user}%22%5D&n=100000"
+        allUsers:          "//plus.google.com/_/socialgraph/lookup/visible/?o=%5Bnull%2Cnull%2C%22#{@user}%22%5D&n=100000"
       havingUserInCircles:
         count:             data[5][3][2][0]
         randomUsers:       data[5][3][2][1]
