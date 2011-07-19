@@ -5,7 +5,7 @@ class exports.GooglePlusScraper
 
   constructor: (@user, callback) ->
     return new GooglePlusScraper(@user, callback) if !(this instanceof GooglePlusScraper)
-    
+
     request {uri: "#{gpBaseURL}#{@user}"}, (err, res, body) ->
       gpConfig = body.match(/OZ_initData = {[\u000a\u000d\u2028\u2029\w\W]+?}/m)
       if gpConfig[0]
@@ -57,8 +57,9 @@ class exports.GooglePlusScraper
         link:    profile[1]
         favicon: profile[2]
         rel:     profile[4]
-      ) 
-    
+      )
+
+
     userProfile =
       id:                  data[5][2][30]
       tagline:             data[5][2][33][1]
@@ -74,7 +75,7 @@ class exports.GooglePlusScraper
       occupation:          data[5][2][6][1]
       employment:          employmentItems
       education:           educationItems
-      places:
+      places: if data[5][2][9][2] and data[5][2][9][2].length is 0 then [] else
         names:             data[5][2][9][2]
         map:               data[5][2][10]
       home:
@@ -93,16 +94,22 @@ class exports.GooglePlusScraper
         email:             data[5][2][13][5]
         address:           data[5][2][13][6]
         chat:              resolveChatServices(data[5][2][13][7])
-      relationship:        'tbd'
-      lookingFor:          'tbd'
+      relationship:        null
+      lookingFor:          null
       gender:              gender[data[5][2][17][1]]
       birthday:            data[5][2][16][1]
       webProfiles:         webProfiles
-      usersInCircles:      data[5][3][2][1]
-      havingUserInCircles: 'tbd'
+      usersInCircles:
+        count:             data[5][3][0][0]
+        randomUsers:       data[5][3][0][1]
+        allUsers:          "//plus.google.com/_/socialgraph/lookup/visible/?o=%5Bnull%2Cnull%2C%22 #{@user}%22%5D&n=100000"
+      havingUserInCircles:
+        count:             data[5][3][2][0]
+        randomUsers:       data[5][3][2][1]
+        allUsers:          "//plus.google.com/_/socialgraph/lookup/incoming/?o=%5Bnull%2Cnull%2C%22#{@user}%22%5D&n=100000"
       photos:              data[5][10][3]
-      
-      
+
+
   getPosts: (data) ->
     posts = []
     for post in data[4][0]
