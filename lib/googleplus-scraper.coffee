@@ -63,7 +63,7 @@ class exports.GooglePlusScraper
       id:                  data[5][2][30]
       tagline:             data[5][2][33][1]
       name:
-        fist:              data[5][2][4][1]
+        first:             data[5][2][4][1]
         last:              data[5][2][4][2]
         full:              data[5][2][4][3]
         other:             data[5][2][5][1]
