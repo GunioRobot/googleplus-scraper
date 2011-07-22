@@ -1,0 +1,20 @@
+!!! xml
+feed(xmlns="http://www.w3.org/2005/Atom")
+  id urn:googleplus:#{profile.id}:atom
+  title Google+: #{profile.name.full}'s public posts
+  subtitle Generated post feed by Google+ Scraper
+  author
+    name #{profile.name.full}
+    uri http://plus.google.com/#{profile.id}/posts
+  generator(uri="https://github.com/fhemberger/googleplus-scraper/") Google+ Scraper
+  link(rel="self", href="/#{profile.id}/posts.atom")
+  updated #{posts[0].date.rfc}
+
+  - posts.forEach(function(post) {
+  entry
+    id #{post.permalink}
+    title #{post.title}
+    content(type="html") #{post.bodyHtml}
+    link(rel="alternate", href="#{post.permalink}")
+    updated #{post.date.rfc}
+  - })

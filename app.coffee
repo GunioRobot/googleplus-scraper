@@ -3,60 +3,68 @@
 path       = require 'path'
 url        = require 'url'
 util       = require 'util'
+
 googleplus = require './lib/googleplus-scraper.coffee'
+view       = require './lib/view.coffee'
 
 
 SERVER_PORT   = '4567'
+SERVER_VIEWS  = path.join __dirname, 'views'
+
+
+views =
+  error:  view.load()
+  index:  view.load("#{SERVER_VIEWS}/index.html.jade")
+  posts:
+    json: view.load()
+    rss:  view.load("#{SERVER_VIEWS}/posts.rss.jade")
+    atom: view.load("#{SERVER_VIEWS}/posts.atom.jade")
+  profile:
+    json: view.load()
 
 
 # Process life vest. Just in case.
-httpResponse = null
+httpResponse = undefined 
 process.addListener 'uncaughtException', (err) ->
   util.log err
-  write(httpResponse, JSON.stringify({ error: err.message }), 'application/json') if httpResponse?
-
-
-write = (res, body, mimetype = 'text/html') ->
-  res.writeHead 200,
-    'Content-Type': "#{mimetype}; charset=utf-8"
-    'Content-Length': Buffer.byteLength(body, 'utf-8')
-    'Access-Control-Allow-Origin': '*'
-    'Access-Control-Allow-Headers': 'X-Requested-With'
-  res.end body
+  views.error.render(httpResponse, {error: err.message}) if httpResponse?
 
 
 server = require('http').createServer (req, res) ->
-  gpRequest = url.parse(req.url).pathname.match(/\/(\d{21})\/?(profile|posts)?\/?$/)
   httpResponse = res
+  uri = url.parse(req.url).pathname
+  
+  # We don't serve your kind here ...
+  return if uri is '/favicon.ico'
 
-  if gpRequest
-    showPosts = (gpRequest[2] is 'posts')
-    gp = googleplus.GooglePlusScraper gpRequest[1], (err, data) =>
+  route = uri.match(///
+    /(\d{21})             # userid
+    /?(profile|posts)?    # view
+    \.?(json|rss|atom)?$  # format
+    ///)
+  
+  if route and route[1]
+    [userId, view, format] = route[1..3]
+    view   ||= 'profile'
+    format ||= 'json'
+    format = 'json' if view is 'profile'
+
+    gp = googleplus.GooglePlusScraper userId, (err, data) =>
       if err
-        gpResponse = { error: err }
-      else  
-        gpResponse = if showPosts then gp.getPosts(data) else gp.getProfile(data)
-      write(res, JSON.stringify(gpResponse), 'application/json')
+        gpResponse = 
+          error: err
+      else
+        if format is 'rss' or format is 'atom'
+          gpResponse =
+            profile: gp.getProfile(data)
+            posts:   gp.getPosts(data)
+        else
+          gpResponse = if view is 'posts' then gp.getPosts(data) else gp.getProfile(data)
+
+      views[view][format].render(res, gpResponse)
 
   else
-    body = '''
-      <!DOCTYPE html>
-      <html><head><meta charset="utf-8" />
-      <title>Google+ Scraper</title>
-      </head><body>
-      <pre>
-      <strong>Google+ Scraper</strong>
-      by Frederic Hemberger (<a href="https://github.com/fhemberger/googleplus-scraper/">GitHub</a>)
-
-      Usage:
-      /<em>[Google+ User ID]</em>/                 &mdash; or &mdash;
-      /<em>[Google+ User ID]</em>/profile          Return user's public profile
-
-      /<em>[Google+ User ID]</em>/posts            Return user's posts
-      </pre>
-      </body></html>
-      '''
-    write(res, body)
+    views.index.render(res)
 
 
 server.listen SERVER_PORT

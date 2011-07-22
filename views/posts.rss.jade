@@ -1,0 +1,17 @@
+!!! xml
+rss(version='2.0')
+  channel
+    title Google+: #{profile.name.full}'s public posts
+    link http://plus.google.com/#{profile.id}/posts
+    description Generated post feed by Google+ Scraper
+    copyright All posts by #{profile.name.full}
+    generator Google+ Scraper (https://github.com/fhemberger/googleplus-scraper/)
+
+    - posts.forEach(function(post) {
+    item
+      title #{post.title}
+      description #{post.bodyHtml}
+      link #{post.permalink}
+      guid #{post.permalink}
+      pubDate #{post.date.utc}
+    - })

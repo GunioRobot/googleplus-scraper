@@ -1,5 +1,24 @@
 request = require 'request'
 
+shorten = (text, chars) ->
+  if text.length >= chars - 2
+    text = text.substr(0, chars - 2)
+    
+    # To avoid cutting words in half, string will be shortend to the last word delimiter
+    lastSpace = text.lastIndexOf(' ')
+    text = text.substring(0, lastSpace) + ' …' if lastSpace isnt -1
+  text
+
+
+pad = (value, len) ->
+  value = value.toString()
+  new Array(len - value.length + 1).join('0') + value
+
+
+Date::toRFCString = ->
+  "#{pad(@getFullYear(), 4)}-#{pad(@getMonth()+1, 2)}-#{pad(@getDate(), 2)}T#{pad(@getHours(), 2)}:#{pad(@getMinutes(), 2)}:#{pad(@getSeconds(), 2)}Z"
+
+
 class exports.GooglePlusScraper
   gpBaseURL = 'https://plus.google.com/'
 
@@ -121,6 +140,11 @@ class exports.GooglePlusScraper
     for post in data[4][0]
       posts.push(
         permalink:      gpBaseURL + post[21]
+        date:
+          epoch:        post[5]
+          utc:          new Date(post[5]).toUTCString()
+          rfc:          new Date(post[5]).toRFCString()
+        title:          shorten post[20], 120
         bodyHtml:       post[4]
         bodyPlain:      post[20]
         attachments:    post[66]

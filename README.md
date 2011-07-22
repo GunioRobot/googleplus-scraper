@@ -14,13 +14,18 @@ Note: This script is still beta. Of cause you're very welcome to contribute. ;-)
 2. npm: `$ curl http://npmjs.org/install.sh | sh`
 3. CoffeeScript: `$ npm install -g coffee-script`
 4. [request](https://github.com/mikeal/request): `$ npm install request`
+5. [jade](https://github.com/visionmedia/jade): `$ npm install jade`
 
 Running `app.coffee` launches the server process. At the moment, profile information or posts are supported:
 
-/[Google+ User ID]/                 — or —  
-/[Google+ User ID]/profile          Return user's public profile  
+### Return user's public profile:
+/_[Google+ User ID]_/  — or —  
+/_[Google+ User ID]_/profile
 
-/[Google+ User ID]/posts            Return user's posts  
+### Return user's posts:
+/_[Google+ User ID]_/posts  
+/_[Google+ User ID]_/posts._[format]_  
+where _[format]_ is either _json_, _rss_ or _atom_
 
 
 ## How it works
