@@ -7,8 +7,10 @@ util       = require 'util'
 googleplus = require './lib/googleplus-scraper.coffee'
 view       = require './lib/view.coffee'
 
+arguments  = process.argv.splice(2)
+port       = parseInt(arguments[0], 10) if arguments[0]
 
-SERVER_PORT   = '4567'
+SERVER_PORT   = port || '4567'
 SERVER_VIEWS  = path.join __dirname, 'views'
 
 
@@ -66,7 +68,10 @@ server = require('http').createServer (req, res) ->
   else
     views.index.render(res)
 
+try
+  server.listen SERVER_PORT
+  util.puts "Google+ Scraper running on port #{SERVER_PORT}"
+catch e
+  util.puts "\033[31mERROR:\033[0m Cannot start server on port #{SERVER_PORT}"
 
-server.listen SERVER_PORT
 
-util.puts "Google+ Scraper running on port #{SERVER_PORT}"

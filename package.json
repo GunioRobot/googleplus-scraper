@@ -1,20 +1,22 @@
 {
-  "author": "Frederic Hemberger (http://frederic-hemberger.de/)",
   "name": "googleplus-scraper",
   "description": "Retrieve profile infos and posts from Google+ users",
-  "version": "0.1",
+  "keywords": "google+, google plus",
+  "version": "0.0.1",
+  "author": "Frederic Hemberger (http://frederic-hemberger.de/)",
   "homepage": "https://github.com/fhemberger/googleplus-scraper/",
+  "bin" : "./bin/googleplus-scraper",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fhemberger/googleplus-scraper.git"
+    "url": "https://github.com/fhemberger/googleplus-scraper.git"
   },
   "main": "app.coffee",
   "engines": {
-    "node": "~v0.4.9"
+    "node": "~0.4.9"
   },
   "dependencies": {
     "coffee-script": ">=1.1.1",
-    "request": ">=1.9.8",
-    "jade": ">=0.13.0"
-  },
+    "jade": ">=0.13.0",
+    "request": ">=1.9.8"
+  }
 }

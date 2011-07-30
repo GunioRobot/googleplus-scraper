@@ -1,0 +1,25 @@
+#!/usr/bin/env coffee
+
+fs    = require 'fs'
+spawn = require('child_process').spawn
+
+usage = "Usage: googleplus-scraper [port]"
+args  = process.argv.slice(2)
+
+switch args[0]
+  when '-v', '--version'
+       content = fs.readFileSync "#{__dirname}/../package.json", 'utf8'
+       pkg = JSON.parse content
+       console.log pkg.version
+       process.exit 0
+  when '-h', '--help'
+       console.log usage
+       process.exit 0
+  else
+    app = spawn 'coffee', ["#{__dirname}/../app.coffee", args[0]]
+    app.stdout.setEncoding('utf8')
+    app.stdout.on 'data', (data) ->
+      console.log data
+    app.stderr.setEncoding('utf8')
+    app.stderr.on 'data', (data) ->
+      console.log data
