@@ -1,22 +1,34 @@
 # Google+ Scraper
-
-Retrieve data from Google+ profiles with [NodeJS](http://nodejs.org/) and [CoffeeScript](http://jashkenas.github.com/coffee-script/).
+### Retrieve data from Google+ profiles with [NodeJS](http://nodejs.org/) and [CoffeeScript](http://jashkenas.github.com/coffee-script/).
 
 The technique used is called “[web scraping](http://en.wikipedia.org/wiki/Web_scraping)”.
-That means: If Google+ changes anything on their HTML, the script is going to fail.
+That means: If Google+ changes anything on their HTML, the script is going to fail and needs to be adjusted.
 
 Note: This script is still beta. Of cause you're very welcome to contribute. ;-)
 
 
-## Requirements
+## Installation
 
-1. NodeJS: see https://github.com/joyent/node/wiki/Installation
-2. npm: `$ curl http://npmjs.org/install.sh | sh`
-3. CoffeeScript: `$ npm install -g coffee-script`
-4. [request](https://github.com/mikeal/request): `$ npm install request`
-5. [jade](https://github.com/visionmedia/jade): `$ npm install jade`
+First of all, you need to install NodeJS and npm:
 
-Running `app.coffee` launches the server process. At the moment, profile information or posts are supported:
+- NodeJS: see https://github.com/joyent/node/wiki/Installation  
+- npm: `$ curl http://npmjs.org/install.sh | sh`  
+
+Then you can either install the package via npm:
+
+	$ npm install -g googleplus-scraper
+	$ googleplus-scraper _[portnumber]_
+
+Or install all dependencies manually and run `app.coffee`:
+
+1. CoffeeScript: `$ npm install -g coffee-script`
+2. [request](https://github.com/mikeal/request): `$ npm install request`
+3. [jade](https://github.com/visionmedia/jade): `$ npm install jade`
+
+
+## How it works
+
+At the moment, profile information and posts are supported:
 
 ### Return user's public profile:
 /_[Google+ User ID]_/  — or —  
@@ -26,9 +38,6 @@ Running `app.coffee` launches the server process. At the moment, profile informa
 /_[Google+ User ID]_/posts  
 /_[Google+ User ID]_/posts._[format]_  
 where _[format]_ is either _json_, _rss_ or _atom_
-
-
-## How it works
 
 Instead of scraping the HTML code itself, this script fights its way through `OZ_initData`, a big, mean and ugly inline JavaScript array containing the profile information.
 
