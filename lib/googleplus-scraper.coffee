@@ -100,7 +100,7 @@ class exports.GooglePlusScraper
       occupation:          data[5][2][6][1]
       employment:          employmentItems
       education:           educationItems
-      places: if data[5][2][9][2] and data[5][2][9][2].length is 0 then [] else
+      places: if not data[5][2][9][2] or data[5][2][9][2].length is 0 then [] else
         names:             data[5][2][9][2]
         map:               data[5][2][10]
       home:
@@ -124,11 +124,11 @@ class exports.GooglePlusScraper
       gender:              gender[data[5][2][17][1]]
       birthday:            data[5][2][16][1]
       webProfiles:         webProfiles
-      usersInCircles:
+      usersInCircles: if not data[5][3] or not data[5][3][0] or data[5][3][0].length is 0 then [] else
         count:             data[5][3][0][0]
         randomUsers:       data[5][3][0][1]
         allUsers:          "//plus.google.com/_/socialgraph/lookup/visible/?o=%5Bnull%2Cnull%2C%22#{@user}%22%5D&n=100000"
-      havingUserInCircles:
+      havingUserInCircles: if not data[5][3] or not data[5][3][2] or data[5][3][2].length is 0 then [] else
         count:             data[5][3][2][0]
         randomUsers:       data[5][3][2][1]
         allUsers:          "//plus.google.com/_/socialgraph/lookup/incoming/?o=%5Bnull%2Cnull%2C%22#{@user}%22%5D&n=100000"
