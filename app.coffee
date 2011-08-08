@@ -4,6 +4,7 @@ path       = require 'path'
 url        = require 'url'
 util       = require 'util'
 
+cache      = require('./lib/pico.coffee').Pico()
 googleplus = require './lib/googleplus-scraper.coffee'
 view       = require './lib/view.coffee'
 
@@ -32,6 +33,21 @@ process.addListener 'uncaughtException', (err) ->
   views.error.render(httpResponse, {error: err.message}) if httpResponse?
 
 
+renderGooglePlusData = (res, [err, data]) ->
+  if err
+    gpResponse =
+      error: err
+  else
+    if res.format is 'rss' or res.format is 'atom'
+      gpResponse =
+        profile: googleplus.getProfile(data)
+        posts:   googleplus.getPosts(data)
+    else
+      gpResponse = if res.view is 'posts' then googleplus.getPosts(data) else googleplus.getProfile(data)
+
+  views[res.view][res.format].render(res, gpResponse)
+
+
 server = require('http').createServer (req, res) ->
   httpResponse = res
   uri = url.parse(req.url).pathname
@@ -46,24 +62,18 @@ server = require('http').createServer (req, res) ->
     ///)
   
   if route and route[1]
-    [userId, view, format] = route[1..3]
-    view   ||= 'profile'
-    format ||= 'json'
-    format = 'json' if view is 'profile'
+    [res.userId, res.view, res.format] = route[1..3]
+    res.view   ||= 'profile'
+    res.format ||= 'json'
+    res.format = 'json' if res.view is 'profile'
 
-    gp = googleplus.GooglePlusScraper userId, (err, data) =>
-      if err
-        gpResponse = 
-          error: err
-      else
-        if format is 'rss' or format is 'atom'
-          gpResponse =
-            profile: gp.getProfile(data)
-            posts:   gp.getPosts(data)
-        else
-          gpResponse = if view is 'posts' then gp.getPosts(data) else gp.getProfile(data)
-
-      views[view][format].render(res, gpResponse)
+    googleplusResponse = cache.get res.userId
+    if googleplusResponse
+      renderGooglePlusData res, googleplusResponse
+    else 
+      googleplus.scrape res.userId, (err, data) =>
+        renderGooglePlusData res, [err, data]
+        cache.set res.userId, [err, data]
 
   else
     views.index.render(res)

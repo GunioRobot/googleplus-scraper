@@ -2,7 +2,7 @@
   "name": "googleplus-scraper",
   "description": "Retrieve profile infos and posts from Google+ users",
   "keywords": "google+, google plus",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Frederic Hemberger (http://frederic-hemberger.de/)",
   "homepage": "https://github.com/fhemberger/googleplus-scraper/",
   "bin" : "./bin/googleplus-scraper",

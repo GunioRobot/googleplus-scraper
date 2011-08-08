@@ -19,10 +19,10 @@ Date::toRFCString = ->
   "#{pad(@getFullYear(), 4)}-#{pad(@getMonth()+1, 2)}-#{pad(@getDate(), 2)}T#{pad(@getHours(), 2)}:#{pad(@getMinutes(), 2)}:#{pad(@getSeconds(), 2)}Z"
 
 
-class exports.GooglePlusScraper
+class GooglePlusScraper
   gpBaseURL = 'https://plus.google.com/'
 
-  constructor: (@user, callback) ->
+  scrape: (@user, callback) ->
     return new GooglePlusScraper(@user, callback) if !(this instanceof GooglePlusScraper)
 
     request {uri: "#{gpBaseURL}#{@user}"}, (err, res, body) ->
@@ -153,3 +153,6 @@ class exports.GooglePlusScraper
         latestComments: post[7]
       )
     return posts
+
+
+module.exports = new GooglePlusScraper()

@@ -1,10 +1,9 @@
 # Google+ Scraper
 ### Retrieve data from Google+ profiles with [NodeJS](http://nodejs.org/) and [CoffeeScript](http://jashkenas.github.com/coffee-script/).
 
-The technique used is called “[web scraping](http://en.wikipedia.org/wiki/Web_scraping)”.
-That means: If Google+ changes anything on their HTML, the script is going to fail and needs to be adjusted.
+The technique used is called “[web scraping](http://en.wikipedia.org/wiki/Web_scraping)”. Instead of scraping the HTML code itself, this script fights its way through `OZ_initData`, a big, mean and ugly inline JavaScript array containing the profile information.
 
-Note: This script is still beta. Of cause you're very welcome to contribute. ;-)
+That means: If Google+ changes anything on their side, the script may fail and needs to be adjusted.
 
 
 ## Installation
@@ -17,7 +16,7 @@ First of all, you need to install NodeJS and npm:
 Then you can either install the package via npm:
 
 	$ npm install -g googleplus-scraper
-	$ googleplus-scraper _[portnumber]_
+	$ googleplus-scraper [portnumber]
 
 Or install all dependencies manually and run `app.coffee`:
 
@@ -39,7 +38,7 @@ At the moment, profile information and posts are supported:
 /_[Google+ User ID]_/posts._[format]_  
 where _[format]_ is either _json_, _rss_ or _atom_
 
-Instead of scraping the HTML code itself, this script fights its way through `OZ_initData`, a big, mean and ugly inline JavaScript array containing the profile information.
+Results for each Google+ user are cached for 60 seconds. This can be adjusted by setting the cache time in milliseconds (app.coffee:7), e.g: `require('./lib/pico.coffee').Pico(30000)` would reduce the cache time to 30 seconds.
 
 
 ## License
