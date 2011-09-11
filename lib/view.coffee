@@ -3,15 +3,18 @@ fs   = require 'fs'
 
 
 class View
-  @_mimeType = 'text/plain'
 
   constructor: (filename, options = {}) ->
+    @_mimeType = 'text/plain'
+    @loadTemplate filename
+
+  loadTemplate: (filename, options = {}) ->
     templateFile = fs.readFileSync(filename, 'utf8')
     @_template   = jade.compile(templateFile, options)
 
   render: (context = undefined, locals = {}) ->
     body = @_template.call(@, locals)
-    
+
     if context
       context.writeHead 200,
         'Content-Type': "#{@_mimeType}; charset=utf-8"
@@ -21,17 +24,20 @@ class View
       context.end body
     else
       body
-    
+
 
 class HTMLView extends View
-  @_mimeType = 'text/html'
+
+  constructor: (filename, options = {}) ->
+    @_mimeType = 'text/html'
+    @loadTemplate filename
 
 
 class JSONView extends View
-  @_mimeType = 'application/json'
 
-  constructor: () ->
-    
+  constructor: (filename, options = {}) ->
+    @_mimeType = 'application/json'
+
   render: (context = undefined, locals = {}) ->
     @_template = (locals) ->
       JSON.stringify locals
@@ -39,11 +45,17 @@ class JSONView extends View
 
 
 class RSSView extends View
-  @_mimeType = 'application/rss+xml'
+
+  constructor: (filename, options = {}) ->
+    @_mimeType = 'application/rss+xml'
+    @loadTemplate filename
 
 
 class ATOMView extends View
-  @_mimeType = 'application/atom+xml'
+
+  constructor: (filename, options = {}) ->
+    @_mimeType = 'application/atom+xml'
+    @loadTemplate filename
 
 
 class ViewFactory
